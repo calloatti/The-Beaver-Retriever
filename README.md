@@ -2,7 +2,9 @@
 
 https://github.com/calloatti/The-Beaver-Retriever
 
-https://steamcommunity.com/sharedfiles/filedetails/?id=
+https://steamcommunity.com/sharedfiles/filedetails/?id=3773280870
+
+https://mod.io/g/timberborn/m/3773280870
 
 Mods on GitHub
 
