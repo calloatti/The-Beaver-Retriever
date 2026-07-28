@@ -14,6 +14,10 @@ Mods on Steam Workshop
 
 https://steamcommunity.com/sharedfiles/filedetails/?id=3682179025
 
+Mods on mod.io
+
+https://mod.io/u/calloatti/?_sort=name
+
 Mods zip files
 
 https://github.com/calloatti/ModZips
