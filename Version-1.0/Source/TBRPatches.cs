@@ -1,71 +1,34 @@
 using HarmonyLib;
-using System.Collections.Generic;
-using Timberborn.CharacterModelSystem;
+using Timberborn.Characters;
 using Timberborn.GameDistricts;
-using Timberborn.Navigation;
-using Timberborn.WalkingSystem;
 using Timberborn.Wandering;
 using UnityEngine;
 
 namespace Calloatti.TheBeaverRetriever
 {
-  public static class UnstuckHelpers
+  [HarmonyPatch(typeof(Citizen), nameof(Citizen.AssignDistrict))]
+  public static class CitizenAssignPatch
   {
-    public const int MaxRadius = 8;
-    public const int MaxZ = 32;
-
-    public static bool TrySpiralSearch(Citizen citizen, DistrictCenter district)
+    [HarmonyPostfix]
+    public static void Postfix(Citizen __instance)
     {
-      Vector3Int gridPos = NavigationCoordinateSystem.WorldToGridInt(citizen.Transform.position);
-
-      for (int radius = 1; radius <= MaxRadius; radius++)
+      if (__instance.AssignedDistrict != null)
       {
-        foreach (Vector2Int offset in GetRingOffsets(radius))
-        {
-          int baseX = gridPos.x + offset.x;
-          int baseY = gridPos.y + offset.y;
-
-          for (int z = gridPos.z; z >= 0; z--)
-          {
-            if (TryTeleport(citizen, district, baseX, baseY, z))
-              return true;
-          }
-
-          for (int z = gridPos.z + 1; z <= MaxZ; z++)
-          {
-            if (TryTeleport(citizen, district, baseX, baseY, z))
-              return true;
-          }
-        }
+        UnstuckHelpers.SetPreviousDistrict(__instance, __instance.AssignedDistrict);
       }
-
-      return false;
     }
+  }
 
-    private static bool TryTeleport(Citizen citizen, DistrictCenter district, int x, int y, int z)
+  [HarmonyPatch(typeof(Citizen), nameof(Citizen.UnassignDistrictIfCutOff))]
+  public static class CitizenUnassignPatch
+  {
+    [HarmonyPrefix]
+    public static void Prefix(Citizen __instance)
     {
-      Vector3Int checkGrid = new Vector3Int(x, y, z);
-      Vector3 checkWorld = NavigationCoordinateSystem.GridToWorld(checkGrid);
-
-      if (!district.IsGloballyReachableFromPosition(checkWorld))
-        return false;
-
-      citizen.Transform.position = checkWorld;
-      citizen.GetComponent<CharacterModel>().Position = checkWorld;
-      citizen.GetComponent<Walker>()?.StopNextTick();
-      return true;
-    }
-
-    public static IEnumerable<Vector2Int> GetRingOffsets(int radius)
-    {
-      for (int x = -radius; x <= radius; x++)
-        yield return new Vector2Int(x, -radius);
-      for (int x = -radius; x <= radius; x++)
-        yield return new Vector2Int(x, radius);
-      for (int y = -radius + 1; y <= radius - 1; y++)
-        yield return new Vector2Int(-radius, y);
-      for (int y = -radius + 1; y <= radius - 1; y++)
-        yield return new Vector2Int(radius, y);
+      if (__instance.HasAssignedDistrict)
+      {
+        UnstuckHelpers.SetPreviousDistrict(__instance, __instance.AssignedDistrict);
+      }
     }
   }
 
@@ -79,10 +42,32 @@ namespace Calloatti.TheBeaverRetriever
         return;
 
       var unstucker = __instance._citizen._citizenUnstucker;
-      foreach (var districtCenter in unstucker._districtCenterRegistry.FinishedDistrictCenters)
+      var districtCenters = unstucker._districtCenterRegistry.FinishedDistrictCenters;
+
+      Vector3 beaverPos = __instance._citizen.Transform.position;
+      foreach (var dc in districtCenters)
       {
-        if (UnstuckHelpers.TrySpiralSearch(__instance._citizen, districtCenter))
+        if (dc.IsGloballyReachableFromPosition(beaverPos))
           return;
+      }
+
+      DistrictCenter previousDistrict = null;
+      UnstuckHelpers.TryGetPreviousDistrict(__instance._citizen, out previousDistrict);
+
+      UnstuckHelpers.TryFindReachableTowardDistrict(__instance._citizen, districtCenters, previousDistrict);
+    }
+  }
+
+  [HarmonyPatch(typeof(Character), nameof(Character.KillCharacter))]
+  public static class CharacterKillPatch
+  {
+    [HarmonyPostfix]
+    public static void Postfix(Character __instance)
+    {
+      var citizen = __instance.GetComponent<Citizen>();
+      if (citizen != null && UnstuckHelpers.HasPreviousDistrict(citizen))
+      {
+        UnstuckHelpers.ClearPreviousDistrict(citizen);
       }
     }
   }
