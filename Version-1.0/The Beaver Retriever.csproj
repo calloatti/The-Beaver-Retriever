@@ -3,12 +3,11 @@
   <PropertyGroup>
     <AssemblyName>thebeaverretriever</AssemblyName>
     <RootNamespace>Calloatti.TheBeaverRetriever</RootNamespace>
+    <TimberbornPath>C:\Program Files (x86)\Steam\steamapps\common\timberborn_main\Timberborn_Data\Managed</TimberbornPath>
   </PropertyGroup>
 
   <Import Project="CommonModSettings.props" />
-  
-  <ItemGroup>
-    <Publicize Include="Timberborn.Wandering" />
-  </ItemGroup>
 
 </Project>
+
+
