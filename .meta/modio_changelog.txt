@@ -1,0 +1,2 @@
+* Game Version: 1.0.0.0 - Mod Version: 2.0.0
+- Refactored unstucking logic to preserve beaver/bot district

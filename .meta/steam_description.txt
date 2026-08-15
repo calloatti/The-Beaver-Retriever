@@ -1,0 +1,19 @@
+Beavers do not forget their way home. When a beaver gets lost, stuck on a roof, or in any other weird spot due to accidental construction schedule mishaps, this mod performs a wider search across the map to find a safe path back to their district. No more sad stranded beavers calling for help.
+
+[h3]How it works[/h3]
+When a beaver's path to its district is cut off they enter a stranded state. Normally they just eventually die. This mod detects stranded beavers and moves them in the direction of the nearest district center, or the previous district they belonged to. It only moves the beaver the minimum distance required to unstuck them.
+[list]
+[*] The mod does nothing while beavers are fine, it only intervenes when they're truly stuck and have no district assigned.
+[*] Teleports only when the beaver is unassigned and stranded.
+[*] Skips rescue if the beaver is already on reachable ground (handles false positives from the stranded check).
+[*] Tracks each beaver's last district so they return to where they came from.
+[/list]
+
+[hr][/hr]
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=3682179025]Mods on Steam[/url]
+
+[url=https://mod.io/u/calloatti/?_sort=name]Mods on mod-dot-io[/url]
+
+[url=https://github.com/search?q=owner%3Acalloatti+sort%3Aname-asc+%22Timberborn+Mod%22&type=repositories]Mods on Github[/url]
+
+[url=https://github.com/calloatti/ModZips]Mod zip files[/url]
