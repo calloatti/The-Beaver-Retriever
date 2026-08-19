@@ -8,7 +8,7 @@ namespace Calloatti.TheBeaverRetriever
   {
     public void StartMod(IModEnvironment modEnvironment)
     {
-      new Harmony("calloatti.thebeaverretriever").PatchAll();
+      new Harmony("Calloatti.TheBeaverRetriever").PatchAll();
     }
   }
 }

@@ -70,3 +70,8 @@ Patches are ordered in beaver lifecycle order:
 - Build: `dotnet build "The Beaver Retriever.csproj"`
 - Output deploys automatically to `C:\Users\calloatti\Documents\Timberborn\Mods\The Beaver Retriever\Version-1.0\`
 - Runtime logs: `C:\Users\calloatti\AppData\LocalLow\Mechanistry\Timberborn\Player.log`
+
+## Hard Rule
+DO NOT EVER TOUCH THE DEPLOY FOLDER.
+
+BUILD DOES EVERYTHING, NEVER EVER MESS WITH THE DEPLOY PROCESS.
